@@ -1,0 +1,74 @@
+
+import org.bitcoinj.crypto.*;
+import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.UnreadableWalletException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class HDVisit {
+
+    private static final String Korea = "0";
+    private static final String C_BLANK1 = " ";
+    private static final String PREFIX = "0x";
+    private static final byte[] SEED = null;
+    private static final String PASSPHRASE = "";
+    private static final Long CREATIONTIMESECONDS = 0L;
+    private final String standardDate = "1993-05-26";
+
+    DeterministicHierarchy root;
+    private int visitedIndex = 0;
+
+    public HDVisit(final String mnemonic, String passphrase) throws UnreadableWalletException {
+        DeterministicSeed deterministicSeed = new DeterministicSeed(mnemonic, SEED, passphrase, CREATIONTIMESECONDS);
+        root = new DeterministicHierarchy(HDKeyDerivation.createMasterPrivateKey(deterministicSeed.getSeedBytes()));
+    }
+
+    public DeterministicKey createPrivKey() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return createPrivKey(sdf.format(new Date()), visitedIndex++);
+    }
+
+    public DeterministicKey createPrivKey(String date, int idx) {
+        List<ChildNumber> parsePath = HDUtils.parsePath(makePath(Korea, date, idx));
+        return root.get(parsePath, true, true);
+    }
+
+    private String makePath(String country, String date, int idx) {
+        return String.join("/",
+                country+"H",
+                calcDateDiff(date)+"H",
+                String.valueOf(idx)
+        );
+        // {m/Contry'/date'/visited}
+    }
+
+    private int timeToSec() {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.HOUR) * 60 * 60 +
+                calendar.get(Calendar.MINUTE) * 60 +
+                calendar.get(Calendar.SECOND);
+    }
+
+    private String calcDateDiff(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date firstDate = null;
+        Date secondDate = null;
+        try {
+            firstDate = sdf.parse(standardDate);
+            secondDate = sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+        return String.valueOf(diff);
+    }
+
+}
