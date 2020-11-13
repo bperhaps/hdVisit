@@ -1,4 +1,4 @@
-import org.bitcoinj.crypto.DeterministicHierarchy;
+import HDVisit.HDVisit;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.wallet.UnreadableWalletException;
 import org.web3j.crypto.Credentials;

@@ -1,3 +1,5 @@
+package HDVisit;
+
 import org.bitcoinj.wallet.UnreadableWalletException;
 
 public class HDVisit_test {

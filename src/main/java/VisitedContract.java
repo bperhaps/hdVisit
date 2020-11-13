@@ -1,3 +1,4 @@
+import network.Web3Connecter;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
@@ -6,25 +7,20 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Uint;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.RawTransaction;
-import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.exceptions.TransactionException;
-import org.web3j.tx.FastRawTransactionManager;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class VisitedContract {
 
@@ -36,7 +32,7 @@ public class VisitedContract {
                 );
 
         String txData = FunctionEncoder.encode(function);
-        TransactionManager txManager = new RawTransactionManager(Web3Connecter.getWeb3Connecter().getInstance(), credentials, 2831);
+        TransactionManager txManager = new RawTransactionManager(Web3Connecter.getInstance(), credentials, 2831);
 
         Response.Error txHash = txManager.sendTransaction(
                 DefaultGasProvider.GAS_PRICE,
@@ -48,7 +44,7 @@ public class VisitedContract {
         return null;
 /*
         TransactionReceiptProcessor receiptProcessor = new PollingTransactionReceiptProcessor(
-                Web3Connecter.getWeb3Connecter().getInstance(),
+                network.Web3Connecter.getWeb3Connecter().getInstance(),
                 TransactionManager.DEFAULT_POLLING_FREQUENCY,
                 TransactionManager.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH);
 
@@ -66,7 +62,7 @@ public class VisitedContract {
                 contractAddress,
                 FunctionEncoder.encode(function));
 
-        EthCall ethCall = Web3Connecter.getWeb3Connecter().getInstance().ethCall(transaction, DefaultBlockParameterName.LATEST).send();
+        EthCall ethCall = Web3Connecter.getInstance().ethCall(transaction, DefaultBlockParameterName.LATEST).send();
         List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
                 function.getOutputParameters());
 

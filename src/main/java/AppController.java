@@ -1,6 +1,5 @@
+import HDVisit.HDVisit;
 import org.bitcoinj.wallet.UnreadableWalletException;
-
-import java.util.Date;
 
 public class AppController {
     private VisitedContract visitedContract;

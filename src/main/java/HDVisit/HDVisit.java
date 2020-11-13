@@ -1,3 +1,4 @@
+package HDVisit;
 
 import org.bitcoinj.crypto.*;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -11,12 +12,10 @@ import java.util.concurrent.TimeUnit;
 public class HDVisit {
 
     private static final String Korea = "0";
-    private static final String C_BLANK1 = " ";
-    private static final String PREFIX = "0x";
     private static final byte[] SEED = null;
     private static final String PASSPHRASE = "";
     private static final Long CREATIONTIMESECONDS = 0L;
-    private final String standardDate = "1993-05-26";
+    private final String standardDate = "1970-01-01";
 
     DeterministicHierarchy root;
     private int visitedIndex = 0;
@@ -43,15 +42,6 @@ public class HDVisit {
                 String.valueOf(idx)
         );
         // {m/Contry'/date'/visited}
-    }
-
-    private int timeToSec() {
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.HOUR) * 60 * 60 +
-                calendar.get(Calendar.MINUTE) * 60 +
-                calendar.get(Calendar.SECOND);
     }
 
     private String calcDateDiff(String date) {
