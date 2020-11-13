@@ -3,6 +3,9 @@ package HDVisit;
 import org.bitcoinj.crypto.*;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.UnreadableWalletException;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Keys;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,7 +28,13 @@ public class HDVisit {
         root = new DeterministicHierarchy(HDKeyDerivation.createMasterPrivateKey(deterministicSeed.getSeedBytes()));
     }
 
+    public Credentials getCredentials() {
+        DeterministicKey privKey = createPrivKey();
+        return Credentials.create(privKey.getPrivateKeyAsHex());
+    }
+
     public DeterministicKey createPrivKey() {
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return createPrivKey(sdf.format(new Date()), visitedIndex++);
     }

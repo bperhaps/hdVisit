@@ -19,8 +19,10 @@ public class VisitedContractTest {
         ECKeyPair keyPair = ECKeyPair.create(privKey.getPrivKeyBytes());
         System.out.println(Keys.toChecksumAddress(Keys.getAddress(keyPair)));
         Credentials c = Credentials.create(privKey.getPrivateKeyAsHex());
-        //Credentials c = Credentials.create("0x8fa66635c7f8ca6f60273571fa8841339b4f25ce11a0ca6d337d7d25011c91e2");
-        visitedContract.visit("0x89b4b94Bbc0681D211413cB0DEE784222a9cf7Eb",
+
+
+        //Credentials c = Credentials.create("0e804e4d5695de02a4bd99b2aec9d6a24aed7b6e1528f775895debaea06d3882");
+        visitedContract.visit("0x445ed7f5f0d0ca0eba2b57542e5cd21348c9e6cd",
                 BigInteger.valueOf(1234),
                 c);
         System.out.println(visitedContract.find("0x76bEF99854a31c7B91791A3c7864313E95CcF3Cc"));

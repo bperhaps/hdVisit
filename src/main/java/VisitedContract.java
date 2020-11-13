@@ -7,6 +7,8 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Uint;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.TransactionEncoder;
+import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.request.Transaction;
@@ -21,9 +23,10 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BinaryOperator;
 
 public class VisitedContract {
-
+    final static String contractAddress = "0x55F5907541d726Ff36166d067Af0A528d37492f9";
 
     public String visit(String shopAddress, BigInteger time, Credentials credentials) throws IOException, TransactionException {
         Function function = new Function("visit",
@@ -32,27 +35,19 @@ public class VisitedContract {
                 );
 
         String txData = FunctionEncoder.encode(function);
-        TransactionManager txManager = new RawTransactionManager(Web3Connecter.getInstance(), credentials, 2831);
+        TransactionManager txManager = new RawTransactionManager(Web3Connecter.getInstance(), credentials, 1337);
 
-        Response.Error txHash = txManager.sendTransaction(
-                DefaultGasProvider.GAS_PRICE,
-                DefaultGasProvider.GAS_LIMIT,
+        String txHash = txManager.sendTransaction(
+                BigInteger.valueOf(1),
+                BigInteger.valueOf(210000),
                 contractAddress,
                 txData,
-                BigInteger.ZERO).getError();
-        System.out.println(txHash.getMessage());
-        return null;
-/*
-        TransactionReceiptProcessor receiptProcessor = new PollingTransactionReceiptProcessor(
-                network.Web3Connecter.getWeb3Connecter().getInstance(),
-                TransactionManager.DEFAULT_POLLING_FREQUENCY,
-                TransactionManager.DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH);
+                BigInteger.ZERO).getTransactionHash();
 
-        TransactionReceipt receipt = receiptProcessor.waitForTransactionReceipt(txHash);
-        return receipt.toString();*/
+        return txHash;
     }
 
-    public String find(String myAddress) throws IOException {
+    public List<Type> find(String myAddress) throws IOException {
         Function function = new Function("find",
                 Collections.emptyList(),
                 Arrays.asList(new TypeReference<Address>() {}, new TypeReference<Uint>() {}));
@@ -66,8 +61,25 @@ public class VisitedContract {
         List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
                 function.getOutputParameters());
 
-        return decode.toString();
+        return decode;
     }
 
-    final static String contractAddress = "0xD2C1D462e06ad1903c7C622afdC5dff7F7E9e09c";
+    public String alarmToPeople(String shopAddress, BigInteger startDate, BigInteger endDate, Credentials credentials) throws IOException {
+        Function function = new Function("alarmToPeople",
+                Arrays.asList(new Address(shopAddress), new Uint(startDate), new Uint(endDate)),
+                Collections.emptyList()
+                );
+
+        String txData = FunctionEncoder.encode(function);
+        TransactionManager txManager = new RawTransactionManager(Web3Connecter.getInstance(), credentials, 1337);
+
+        String txHash = txManager.sendTransaction(
+                BigInteger.valueOf(1),
+                BigInteger.valueOf(210000),
+                contractAddress,
+                txData,
+                BigInteger.ZERO).getTransactionHash();
+
+        return txHash;
+    }
 }
