@@ -21,22 +21,15 @@ public class HDVisit {
     private final String standardDate = "1970-01-01";
 
     DeterministicHierarchy root;
-    private int visitedIndex = 0;
 
     public HDVisit(final String mnemonic, String passphrase) throws UnreadableWalletException {
         DeterministicSeed deterministicSeed = new DeterministicSeed(mnemonic, SEED, passphrase, CREATIONTIMESECONDS);
         root = new DeterministicHierarchy(HDKeyDerivation.createMasterPrivateKey(deterministicSeed.getSeedBytes()));
     }
 
-    public Credentials getCredentials() {
-        DeterministicKey privKey = createPrivKey();
+    public Credentials getCredentials(String date, int idx) {
+        DeterministicKey privKey = createPrivKey(date, idx);
         return Credentials.create(privKey.getPrivateKeyAsHex());
-    }
-
-    public DeterministicKey createPrivKey() {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return createPrivKey(sdf.format(new Date()), visitedIndex++);
     }
 
     public DeterministicKey createPrivKey(String date, int idx) {
